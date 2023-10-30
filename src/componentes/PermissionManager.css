@@ -1,0 +1,8 @@
+.PermissionManager .jumbotron {
+  background-color: blue;
+  color: white;
+}
+
+.PermissionManager hr {
+  background-color: #ddd;
+}
