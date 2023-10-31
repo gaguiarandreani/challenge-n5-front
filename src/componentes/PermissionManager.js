@@ -23,7 +23,7 @@ import { makeStyles } from "@mui/styles"
 import axios from "axios";
 import { customTheme } from "./themes/customTheme";
 
-const API_URL = "https://localhost:5001/api/permissions";
+const API_URL = process.env.REACT_APP_API + "/api/permissions";
 
 let api = axios.create({
   baseURL: API_URL,
