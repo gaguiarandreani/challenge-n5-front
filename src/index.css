@@ -2,3 +2,15 @@
   padding-top: 40px;
   padding-bottom: 40px;
 }
+
+.boder-color-red {
+  border-color: red !important;
+  color: red !important;
+  border-radius: 3px !important;
+}
+
+.boder-color-red > * {
+  border-color: red !important;
+  color: red !important;
+  border-radius: 3px !important;
+}
