@@ -1,5 +1,5 @@
 import "./App.css";
-import PermissionManager from "./componentes/PermissionManager";
+import PermissionManager from "./components/PermissionManager";
 
 function App() {
   return (
