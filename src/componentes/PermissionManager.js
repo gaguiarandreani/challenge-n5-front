@@ -77,15 +77,6 @@ function PermissionManager() {
 
   const classes = useStyles();
 
-  useEffect(() => {
-    // Fetch permissions from the API on component mount
-    api.get(API_URL).then((response) => {
-      if (response.data.success) {
-        setPermissions(response.data.data);
-      }
-    });
-  }, []);
-
   const permissionTypes = [
     {
       id: 1,
@@ -96,6 +87,42 @@ function PermissionManager() {
       description: 'Employee'
     }
   ];
+
+  const snackbarPosition = {
+    vertical: 'bottom',
+    horizontal: 'center'
+  }
+
+  const setSnackbarError = (message) => {
+    setSnackbar({
+      open: true,
+      vertical: snackbarPosition.vertical,
+      horizontal: snackbarPosition.horizontal,
+      severity: 'error',
+      message: message
+    });
+  }
+
+  const setSnackbarSuccess = (message) => {
+    setSnackbar({
+      open: true,
+      vertical: snackbarPosition.vertical,
+      horizontal: snackbarPosition.horizontal,
+      severity: 'success',
+      message: message
+    });
+  }
+
+  useEffect(() => {
+    // Fetch permissions from the API on component mount
+    api.get(API_URL).then((response) => {
+      if (response.data.success) {
+        setPermissions(response.data.data);
+      }
+    }).catch(() => {
+      setSnackbarError('There was an error retrieving permissions');
+    });
+  }, []);
 
   const validatePermission = (validations, permission, prop) => {
     let errors = {
@@ -129,26 +156,6 @@ function PermissionManager() {
     return validations;
   }
 
-  const setSnackbarError = (message) => {
-    setSnackbar({
-      open: true,
-      vertical: 'top',
-      horizontal: 'center',
-      severity: 'error',
-      message: message
-    });
-  }
-
-  const setSnackbarSuccess = (message) => {
-    setSnackbar({
-      open: true,
-      vertical: 'top',
-      horizontal: 'center',
-      severity: 'success',
-      message: message
-    });
-  }
-
   const handleCreatePermission = () => {
     newPermission.permissionTypeId = selectedPermissionType;
 
@@ -161,6 +168,8 @@ function PermissionManager() {
         setNewPermission({});
         setSelectedPermissionType(""); 
         setSnackbarSuccess('Entity created successfuly');
+      }).catch(() => {
+        setSnackbarError('There was an error saving the permission');
       });
     } else {
       setErrors(validations);
@@ -182,6 +191,8 @@ function PermissionManager() {
         setPermissions(permissions.map((p) => (p.id === selectedPermission.id ? selectedPermission : p)));
         setSelectedPermission(null);
         setSnackbarSuccess('Entity updated successfuly');
+      }).catch(() => {
+        setSnackbarError('There was an error updating the permission');
       });
     } else {
       setErrorsModif(validations);
@@ -189,11 +200,11 @@ function PermissionManager() {
     }
   };
 
-  const handleDeletePermission = (id) => {
-    api.delete(`${API_URL}/${id}`).then(() => {
-      setPermissions(permissions.filter((permission) => permission.id !== id));
-    });
-  };
+  // const handleDeletePermission = (id) => {
+  //   api.delete(`${API_URL}/${id}`).then(() => {
+  //     setPermissions(permissions.filter((permission) => permission.id !== id));
+  //   });
+  // };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
