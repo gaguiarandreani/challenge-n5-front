@@ -2,18 +2,22 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY .env .env
+COPY package*.json ./
 
-RUN sed -i "s|REACT_APP_API=.*|REACT_APP_API=http://localhost:5001|" .env
+RUN npm ci --force
 
 COPY . .
 
-RUN npm ci --force
+COPY .env .env
+
+ARG REACT_APP_API='http://localhost:5001'
+ENV REACT_APP_API='http://localhost:5001'
+
+RUN sed -i -e 's|REACT_APP_API=.*|REACT_APP_API='"$REACT_APP_API"'|' .env
 
 RUN npm run build
 
 ENV NODE_ENV production
-#ENV REACT_APP_API=http://localhost:5001
 
 EXPOSE 3000
 
